@@ -14,8 +14,13 @@
         let now = new Date();
         now.setSeconds(now.getSeconds() + 2); // 네이버시계랑 2초 차이가 있어 맞춰줌
 
+        // now.setMinutes(now.getMinutes() + 101);
+
         let nearTime = [];
         let isTodayIsland = false;
+
+        // 출현중인 섬 상위 정렬
+        let openingIslandIdx = [];
         for (let i=0; i < islandData.length; i++) {
 
             let cnt = 0;
@@ -25,6 +30,8 @@
 
             let nextIslandOpenTime;
             let nextRemainingTime;
+
+            let isOpening = false;
             for (let j=0; j < islandData[i].appearTime.length; j++) {
 
                 // 섬 열리는 시간
@@ -45,13 +52,21 @@
                 }
                 if (remainingTime > 0) {
 
-                    createCard(islandData[i].islandName, islandData[i].img, timeConversion(remainingTime), islandData[i].reward, timeConversion(nextRemainingTime));
+                    createCard(islandData[i].islandName, islandData[i].img, timeConversion(remainingTime), islandData[i].reward, timeConversion(nextRemainingTime), isOpening);
 
                     isTodayIsland = true;
 
                     cnt++;
                     if (cnt == 1) break;
-                }                
+                }
+                else {
+                    let pastTime = parseInt((Math.abs(remainingTime) % 3600));
+                    if (pastTime < 180) {
+                        isOpening = true;
+
+                        openingIslandIdx.push(i);
+                    }
+                }
             }
             if (!isTodayIsland) {
                 // 섬 열리는 시간
@@ -72,6 +87,23 @@
             if(a.remainingTime < b.remainingTime) return -1;
         });
 
+        openingIslandIdx = [...new Set(openingIslandIdx)];
+        _openingIslandIdx = [];
+
+        let idx = 0;
+        nearTime.forEach(function(data) {            
+            for (var i=0; i < openingIslandIdx.length; i++) {
+                if (data.idx === openingIslandIdx[i]) _openingIslandIdx.push(idx);
+            }            
+            idx++;
+        });
+
+        for (var i=0; i < _openingIslandIdx.length; i++) {
+            let tmp = nearTime[_openingIslandIdx[i]];
+            nearTime.splice(_openingIslandIdx[i], 1);
+            nearTime.unshift(tmp);
+        }
+
         let _islandData = [];
         for (var i=0; i < nearTime.length; i++) {
             _islandData.push(islandData[nearTime[i].idx]);
@@ -79,7 +111,7 @@
         islandData = _islandData;
     }
 
-    function createCard(islandName, img, remainingTime, reward, nextRemainingTime) 
+    function createCard(islandName, img, remainingTime, reward, nextRemainingTime, isOpening) 
     {
         let mind = reward.mind;
         let adventure = reward.adventure;
@@ -102,6 +134,13 @@
             rewards.push(heart);
         }
 
+        if (isOpening) {
+            isOpening = `<span class="badge rounded-pill bg-danger">출현중</span>`;
+        }
+        else {
+            isOpening = "";
+        }
+
         let cardData    = `<div class="card mb-3 islands ${isMind} ${isAdventure} ${isHeart}" style="max-width: 720px;">`;
         cardData       +=   `<div class="row g-0">`;
         cardData       +=       `<div class="col-md-4 w-25">`;
@@ -109,7 +148,7 @@
         cardData       +=       `</div>`;
         cardData       +=       `<div class="col-md-8 w-75">`;
         cardData       +=            `<div class="card-body">`;
-        cardData       +=               `<h4 class="card-title">${islandName}</h4>`;
+        cardData       +=               `<h4 class="card-title">${islandName} ${isOpening}</h4>`;
         cardData       +=               `<p class="card-text">`;
         cardData       +=               `<span class="fs-5">등장까지 남은 시간 : </span><span class="remaining-time fs-5">${remainingTime}</span><br><br>`;
         cardData       +=               `<span class="text-danger">기대 보상 : </span><span class="reward text-danger">${rewards.join(', ')}</span><br>`;
