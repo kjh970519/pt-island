@@ -60,6 +60,7 @@
                     if (cnt == 1) break;
                 }
                 else {
+                    isTodayIsland = false;
                     let pastTime = parseInt((Math.abs(remainingTime) % 3600));
                     if (pastTime < 180) {
                         isOpening = true;
@@ -74,7 +75,7 @@
                 islandOpenTime.setDate(islandOpenTime.getDate() + 1);
                 remainingTime = (islandOpenTime.getTime() - now.getTime()) / 1000;
 
-                createCard(islandData[i].islandName, islandData[i].img, timeConversion(remainingTime), null, timeConversion(nextRemainingTime));
+                createCard(islandData[i].islandName, islandData[i].img, timeConversion(remainingTime), islandData[i].reward, timeConversion(nextRemainingTime), isOpening);
             }
 
             // 남은시간 순으로 정렬하기 위한 배열 생성
