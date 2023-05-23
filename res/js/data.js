@@ -1,4 +1,4 @@
-const islandData = [
+let islandData = [
     {
         islandName: "잠자는 노래의 섬", 
         appearTime: [

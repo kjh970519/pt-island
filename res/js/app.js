@@ -3,8 +3,7 @@
     // getHours - 시간
     // getMinutes - 분
     // getSeconds - 초
-
-    var test = setInterval(function() {
+    setInterval(function() {
 
         $(".tab-pane").empty();
         getRemainingTime();
@@ -15,8 +14,7 @@
         let now = new Date();
         now.setSeconds(now.getSeconds() + 2); // 네이버시계랑 2초 차이가 있어 맞춰줌
 
-        console.log(now);
-
+        let nearTime = [];
         let isTodayIsland = false;
         for (let i=0; i < islandData.length; i++) {
 
@@ -63,7 +61,22 @@
 
                 createCard(islandData[i].islandName, islandData[i].img, timeConversion(remainingTime), null, timeConversion(nextRemainingTime));
             }
+
+            // 남은시간 순으로 정렬하기 위한 배열 생성
+            nearTime.push(JSON.parse(`{"remainingTime": ${remainingTime}, "idx": ${i}}`));
         };
+
+        nearTime.sort(function(a, b)  {
+            if(a.remainingTime > b.remainingTime) return 1;
+            if(a.remainingTime === b.remainingTime) return 0;
+            if(a.remainingTime < b.remainingTime) return -1;
+        });
+
+        let _islandData = [];
+        for (var i=0; i < nearTime.length; i++) {
+            _islandData.push(islandData[nearTime[i].idx]);
+        }
+        islandData = _islandData;
     }
 
     function createCard(islandName, img, remainingTime, reward, nextRemainingTime) 
