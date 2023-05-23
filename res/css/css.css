@@ -1,0 +1,44 @@
+.container {
+    padding: 0;
+    max-width: 720px;
+}
+.navbar {
+    border-radius: 0px 0px 5px 5px;
+}
+.nav-link {
+    color: #FFFFFF;
+}
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    background-color: #FFFFFF;
+    color: #000000;
+}
+.nav-link:hover {
+    color: #ddd;
+}
+.navbar-brand {
+    cursor: pointer;
+}
+.tab-pane {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.islands {
+    display: none;
+}
+
+#pills-all .islands {
+    display: block !important;
+}
+
+#pills-mind .mind {
+    display: block !important;
+}
+
+#pills-adventure .adventure {
+    display: block !important;
+}
+
+#pills-heart .heart {
+    display: block !important;
+}
