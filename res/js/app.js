@@ -63,7 +63,7 @@
                     isTodayIsland = false;
                     let pastTime = parseInt((Math.abs(remainingTime) % 3600));
                     if (pastTime < 180) {
-                        isOpening = true;
+                        // isOpening = true;
 
                         openingIslandIdx.push(i);
                     }
